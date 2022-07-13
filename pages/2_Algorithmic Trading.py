@@ -21,7 +21,7 @@ def convert_df(df):
     return df.to_csv().encode('utf-8')
 
 
-IEX_CLOUD_API_TOKEN = 'Tpk_059b97af715d417d9f49f50b51b1c448'
+IEX_CLOUD_API_TOKEN = ENTER_YOUR_TOKEN
 stocks = pd.read_csv('sp_500_stocks.csv')
 symbol = 'AAPL'
 api_url = f'https://sandbox.iexapis.com/stable/stock/{symbol}/quote?token={IEX_CLOUD_API_TOKEN}'
