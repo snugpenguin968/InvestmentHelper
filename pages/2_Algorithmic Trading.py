@@ -102,7 +102,7 @@ with col2:
         except ValueError:
             print("That's not a number! \n Try again:")
             portfolio_size = input("Enter the value of your portfolio:")
-        position_size = float(portfolio_size) / len(final_dataframe.index)
+        #position_size = float(portfolio_size) / len(final_dataframe.index)
         symbol_groups = list(chunks(stocks['Ticker'], 100))
         symbol_strings = []
         for i in range(0, len(symbol_groups)):
