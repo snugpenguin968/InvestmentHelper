@@ -1,5 +1,5 @@
 # FinanceHelper
-Streamlit app that presents several tools to aid in portfolio construction and investing. 
+[Streamlit app](https://snugpenguin968-financehelper-home-ivl8pi.streamlitapp.com) that presents several tools to aid in portfolio construction and investing. 
 
 Current features
   1. Portfolio Visualizer: Presents key visuals and statistics for any given portfolio
