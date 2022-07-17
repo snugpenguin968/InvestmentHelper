@@ -181,8 +181,8 @@ def daily_returns(all_stock_values):
     return fig2
 
 
-st.set_page_config(page_title="Portfolio Helper", page_icon="📁")
-st.markdown("<h1 style='text-align: center; '>Portfolio Helper</h1>", unsafe_allow_html=True)
+st.set_page_config(page_title="Portfolio Visualizer", page_icon="📁")
+st.markdown("<h1 style='text-align: center; '>Portfolio Visualizer</h1>", unsafe_allow_html=True)
 st.markdown("<h3 style='text-align: center;'>Build your portfolio here</h3>", unsafe_allow_html=True)
 dates_input=st.date_input('This site supports stocks ranging from January 1, 2000 to the current date.',value=(dt.date(2020,1,1),date.today()),max_value=date.today(),min_value=dt.date(2000,1,1))
 stock_list=pd.read_csv('Wilshire-5000-Stocks.csv')['Ticker'].tolist()
