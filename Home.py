@@ -1,11 +1,11 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="Finance App",
+    page_title="Investment App",
 
 )
 
-st.write("# Finance Helper 💵")
+st.write("# Investment Helper 💵")
 
 st.sidebar.success("Select a tool above.")
 
