@@ -277,7 +277,7 @@ if shares_submitted:
         #st.markdown(f"<p style='text-align: center;'>Funds Remaining After Suggested Allocation: ${leftover.round(2)}</p>",unsafe_allow_html=True )
         st.write(f'Funds Remaining After Suggested Allocation: ${leftover.round(2)}')
     except Exception as e:
-        st.markdown(f"<p style='text-align: center;'>This combination of stocks, shares, and funds is unable to be optimized.</p>",unsafe_allow_html=True )
+        st.write("This combination of stocks, shares, and funds is unable to be optimized. You may try again with a different combination of values.")
            
                 
 
