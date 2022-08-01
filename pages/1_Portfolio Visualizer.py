@@ -215,28 +215,25 @@ if shares_submitted:
     st.plotly_chart(donut(all_stock_values))
     st.markdown("<h3 style='text-align: center;'>Key Statistics</h3>", unsafe_allow_html=True)
     port_val_start = tot_port_df.iloc[0,-2]
-    #st.markdown("<p style='text-align: center;'>Portfolio Value at Start of Timeframe : $%2.2f</p>" % (port_val_start),unsafe_allow_html=True)
-    st.write(f'Portfolio Value at Start of Timeframe : ${(port_val_start*100).round(2)}')
+    st.write(f"Portfolio Value at Start of Timeframe: ${'{:,.2f}'.format(port_val_start)}")
     port_val_end = tot_port_df.iloc[-1,-2]
-    #st.markdown("<p style='text-align: center;'>Portfolio Value at End of Timeframe : $%2.2f </p>" % (port_val_end),unsafe_allow_html=True)
-    st.write(f'Portfolio Value at End of Timeframe : ${(port_val_end*100).round(2)}')
+    st.write(f"Portfolio Value at End of Timeframe: ${'{:,.2f}'.format(port_val_end)}")
     roi_port = (port_val_end - port_val_start) / port_val_end
-    #st.markdown("<p style='text-align: center;'>Portfolio ROI at End of Timeframe : %2.2f %% </p>" % (roi_port * 100),unsafe_allow_html=True)
+
     st.write(f'Portfolio ROI at End of Timeframe : {(roi_port*100).round(2)}%')
-    # S&P ROI
+
     sp_df=add_daily_return_to_df(sp_df)
     sp_val_start = sp_df.iloc[0,-2]
     sp_val_end = sp_df.iloc[-1,-2]
     sp_roi = (sp_val_end - sp_val_start) / sp_val_end
-    #st.markdown("<p style='text-align: center;'>S&P ROI at End of Timeframe : %2.2f %%</p>" % (sp_roi * 100),unsafe_allow_html=True)
+
     st.write(f'S&P ROI at End of Timeframe : {(sp_roi*100).round(2)}%')
     risk_free_rate=0.013
     port_beta = find_port_beta(tot_port_df, dates_input[0],dates_input[1])
-    #st.markdown("<p style='text-align: center;'>Portfolio Beta : %2.2f %%</p>" % (port_beta * 100),unsafe_allow_html=True)
     st.write(f'Portfolio Beta : {(port_beta*100).round(2)}%')
     port_alpha = roi_port - risk_free_rate - (port_beta * (sp_roi - risk_free_rate))
-    #st.markdown("<p style='text-align: center;'>Portfolio Alpha : %2.2f %%</p>" % (port_alpha * 100),unsafe_allow_html=True )
     st.write(f'Portfolio Alpha : {(port_alpha*100).round(2)}%')
+    
     col1,col2=st.columns(2)
     returns=mult_df.pct_change().drop('Value',axis=1)
     with col1:
@@ -247,7 +244,7 @@ if shares_submitted:
         st.write(returns.cov()*252)
     st.markdown("<h3 style='text-align: center;'>Optimization</h3>", unsafe_allow_html=True)
     st.markdown("<h6 style='text-align: center;'>*Optimized for the max Sharpe Ratio</h6>", unsafe_allow_html=True)
-        #st.caption('Optimized for the max Sharpe Ratio')
+
     mu=expected_returns.mean_historical_return(mult_df)
     S=risk_models.sample_cov(mult_df)
     try:
@@ -256,13 +253,13 @@ if shares_submitted:
         weights=ef.max_sharpe()
         cleaned_weights=ef.clean_weights()
         performance=(ef.portfolio_performance(verbose=True))
-        #st.markdown(f"<p style='text-align: center;'>Expected Annual Return : {(performance[0]*100).round(2)}%</p>",unsafe_allow_html=True )
+
         st.write(f'Expected Annual Return : {(performance[0]*100).round(2)}%')
-        #st.markdown(f"<p style='text-align: center;'>Annual Volatility : {(performance[1]*100).round(2)}%</p>",unsafe_allow_html=True )
+
         st.write(f'Annual Volatility : {(performance[1]*100).round(2)}%')
-        #st.markdown(f"<p style='text-align: center;'>Sharpe Ratio : {(performance[2]).round(2)}</p>",unsafe_allow_html=True )
+
         st.write(f'Sharpe Ratio : {(performance[2]).round(2)}')
-        #st.markdown("<h6 style='text-align: center;'>This segment will return a suggested Discrete Allocation (number of shares you should buy for each stock)</h6>", unsafe_allow_html=True)
+
         st.caption('This segment will return a suggested Discrete Allocation (number of shares you should buy for each stock)')
         latest_prices=get_latest_prices(mult_df)
         weights=cleaned_weights
@@ -273,11 +270,10 @@ if shares_submitted:
                 st.write(f'{options[0]: v}')
             else:
                 st.write(f'{a} : {v}')
-            #st.markdown(f"<p style='text-align: center;'>{a} : {v}</p>",unsafe_allow_html=True )
-        #st.markdown(f"<p style='text-align: center;'>Funds Remaining After Suggested Allocation: ${leftover.round(2)}</p>",unsafe_allow_html=True )
+
         st.write(f'Funds Remaining After Suggested Allocation: ${leftover.round(2)}')
     except Exception as e:
-        st.write("This combination of stocks, shares, and funds is unable to be optimized. You may try again with a different combination of values.")
+        st.write('This combination of stocks, shares, and funds is not able to be optimized. Please try again with different values.')
            
                 
 
