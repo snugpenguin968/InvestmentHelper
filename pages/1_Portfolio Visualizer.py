@@ -1,12 +1,10 @@
 import streamlit as st
 import pandas as pd
-import pydeck as pdk
 from urllib.error import URLError
 import datetime as dt
 from datetime import date
 import copy
 import streamlit.components.v1 as components
-import yahoo_fin.stock_info as si
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
@@ -24,13 +22,9 @@ import copy
 import os
 from os import listdir
 from os.path import isfile, join
-#Statsmodels is a great library we can use to run regressions.
-import statsmodels.api as sm
-# Seaborn extends the capabilities of Matplotlib
 import seaborn as sns
 import yfinance as yf
 # Used for calculating regressions
-from statsmodels.tsa.ar_model import AutoReg, ar_select_order
 plt.style.use('fivethirtyeight')
 from pypfopt.efficient_frontier import EfficientFrontier
 from pypfopt import risk_models
@@ -38,10 +32,10 @@ from pypfopt import expected_returns
 from pypfopt.discrete_allocation import DiscreteAllocation,get_latest_prices
 
 
+
 def get_from_yahoo(ticker, start,end):
-    df = web.DataReader(ticker, 'yahoo', start, end)
+    df = yf.download(ticker, start, end)
     df.index=df.index.date
-    
     return df
 def add_daily_return_to_df(df):
     df['daily_return']=(df['Adj Close']/df['Adj Close'].shift(1))-1
@@ -181,8 +175,8 @@ def daily_returns(all_stock_values):
     return fig2
 
 
-st.set_page_config(page_title="Portfolio Visualizer", page_icon="📁")
-st.markdown("<h1 style='text-align: center; '>Portfolio Visualizer</h1>", unsafe_allow_html=True)
+st.set_page_config(page_title="Portfolio Helper", page_icon="📁")
+st.markdown("<h1 style='text-align: center; '>Portfolio Helper</h1>", unsafe_allow_html=True)
 st.markdown("<h3 style='text-align: center;'>Build your portfolio here</h3>", unsafe_allow_html=True)
 dates_input=st.date_input('This site supports stocks ranging from January 1, 2000 to the current date.',value=(dt.date(2020,1,1),date.today()),max_value=date.today(),min_value=dt.date(2000,1,1))
 stock_list=pd.read_csv('Wilshire-5000-Stocks.csv')['Ticker'].tolist()
@@ -203,7 +197,7 @@ with st.form('shares'):
 
         st.caption('The search query may take a while to run depending on the size of your portfolio.')
 if shares_submitted:
-    sp_df = web.DataReader('^GSPC', 'yahoo', dates_input[0],dates_input[1])
+    sp_df = yf.download('^GSPC', dates_input[0],dates_input[1])
     mult_df=(merge_df_by_column_name('Adj Close',dates_input[0],dates_input[1],options)) 
     shares=[i for i in shares_dict.values()]
     mult_df=add_port_val_col(mult_df,shares)
@@ -221,7 +215,7 @@ if shares_submitted:
     roi_port = (port_val_end - port_val_start) / port_val_end
 
     st.write(f'Portfolio ROI at End of Timeframe : {(roi_port*100).round(2)}%')
-
+    # S&P ROI
     sp_df=add_daily_return_to_df(sp_df)
     sp_val_start = sp_df.iloc[0,-2]
     sp_val_end = sp_df.iloc[-1,-2]
@@ -230,10 +224,11 @@ if shares_submitted:
     st.write(f'S&P ROI at End of Timeframe : {(sp_roi*100).round(2)}%')
     risk_free_rate=0.013
     port_beta = find_port_beta(tot_port_df, dates_input[0],dates_input[1])
+
     st.write(f'Portfolio Beta : {(port_beta*100).round(2)}%')
     port_alpha = roi_port - risk_free_rate - (port_beta * (sp_roi - risk_free_rate))
+
     st.write(f'Portfolio Alpha : {(port_alpha*100).round(2)}%')
-    
     col1,col2=st.columns(2)
     returns=mult_df.pct_change().drop('Value',axis=1)
     with col1:
